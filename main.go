@@ -910,11 +910,11 @@ func checkAndMuteUser(bot *tgbotapi.BotAPI, settings *BotSettings, chatID int64,
 
 		// Determine how to identify the user in the message
 		if username != "" {
-			userIdentifier = fmt.Sprintf("@*%s* - ID: `%d`", username, userID)
+			userIdentifier = fmt.Sprintf("@*%s*", username)
 		} else if fullName != "" {
-			userIdentifier = fmt.Sprintf("*%s* - ID: `%d`", fullName, userID)
+			userIdentifier = fmt.Sprintf("*%s*", fullName)
 		} else {
-			userIdentifier = fmt.Sprintf("User ID: `%d`", userID)
+			userIdentifier = "Unknown user"
 		}
 
 		if isNewUser {
@@ -953,8 +953,8 @@ func checkAndMuteUser(bot *tgbotapi.BotAPI, settings *BotSettings, chatID int64,
 				// Simplify the formatting to make it more reliable with Markdown
 				adminName := strings.TrimPrefix(result.Username, "@")
 				if adminUserID > 0 {
-					notificationText += fmt.Sprintf("*%s* - ID: `%d` - Similarity: %.2f%%\n",
-						adminName, adminUserID, result.Similarity*100)
+					notificationText += fmt.Sprintf("*%s* - Similarity: %.2f%%\n",
+						adminName, result.Similarity*100)
 				} else {
 					notificationText += fmt.Sprintf("*%s* - Similarity: %.2f%%\n",
 						adminName, result.Similarity*100)
@@ -1117,9 +1117,9 @@ func checkAndMuteUser(bot *tgbotapi.BotAPI, settings *BotSettings, chatID int64,
 
 			// Add user identifier
 			if username != "" {
-				fmt.Fprintf(&auditText, "Scammer: @*%s* - ID: `%d`\n", username, userID)
+				fmt.Fprintf(&auditText, "Scammer: @*%s*\n", username)
 			} else if fullName != "" {
-				fmt.Fprintf(&auditText, "Scammer: *%s* - ID: `%d`\n", fullName, userID)
+				fmt.Fprintf(&auditText, "Scammer: *%s*\n", fullName)
 			} else {
 				fmt.Fprintf(&auditText, "User ID: `%d`\n", userID)
 			}
@@ -1137,23 +1137,9 @@ func checkAndMuteUser(bot *tgbotapi.BotAPI, settings *BotSettings, chatID int64,
 			if len(similarToAdmins) > 0 {
 				auditText.WriteString("\nSimilar to group admins:\n")
 				for _, result := range similarToAdmins {
-					// Find the admin info to get their user ID
-					var adminUserID int64
-					for _, admin := range adminInfo {
-						if strings.TrimPrefix(result.Username, "@") == admin.Username || result.Username == admin.FirstName {
-							adminUserID = admin.UserID
-							break
-						}
-					}
-
 					adminName := strings.TrimPrefix(result.Username, "@")
-					if adminUserID > 0 {
-						fmt.Fprintf(&auditText, "- *%s* - ID: `%d` - Similarity: %.2f%%\n",
-							adminName, adminUserID, result.Similarity*100)
-					} else {
-						fmt.Fprintf(&auditText, "- *%s* - Similarity: %.2f%%\n",
-							adminName, result.Similarity*100)
-					}
+					fmt.Fprintf(&auditText, "- *%s* - Similarity: %.2f%%\n",
+						adminName, result.Similarity*100)
 				}
 			}
 

@@ -747,14 +747,14 @@ func HandleCommand(bot *tgbotapi.BotAPI, settings *BotSettings, update *tgbotapi
 				update.Message.Chat.Title, update.Message.Chat.ID)
 
 			for i, admin := range adminInfo {
-				fmt.Fprintf(&responseText, "%d. Admin ID: `%d`\n", i+1, admin.UserID)
+				fmt.Fprintf(&responseText, "%d. ", i+1)
 
 				// Username information
 				if admin.Username != "" {
-					fmt.Fprintf(&responseText, "   Username: `@%s`\n", admin.Username)
+					fmt.Fprintf(&responseText, "Username: `@%s`\n", admin.Username)
 					fmt.Fprintf(&responseText, "   Normalized Username: `%s`\n", strings.ToLower(strings.ReplaceAll(admin.Username, " ", "")))
 				} else {
-					fmt.Fprintf(&responseText, "   Username: (none)\n")
+					fmt.Fprintf(&responseText, "Username: (none)\n")
 				}
 
 				// First name information
@@ -802,9 +802,9 @@ func HandleCommand(bot *tgbotapi.BotAPI, settings *BotSettings, update *tgbotapi
 					break
 				}
 
-				fmt.Fprintf(&shortResponseText, "%d. Admin ID: `%d`\n", i+1, admin.UserID)
+				fmt.Fprintf(&shortResponseText, "%d. ", i+1)
 				if admin.Username != "" {
-					fmt.Fprintf(&shortResponseText, "   Username: `@%s`\n", admin.Username)
+					fmt.Fprintf(&shortResponseText, "Username: `@%s`\n", admin.Username)
 				}
 				if admin.FirstName != "" {
 					fmt.Fprintf(&shortResponseText, "   First Name: `%s`\n", admin.FirstName)
